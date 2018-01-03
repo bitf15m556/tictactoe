@@ -1,0 +1,108 @@
+
+#*******************winning function***********************
+
+def winFunction(board):
+    winning = ((1, 2, 3), (4, 5, 6), (7, 8, 9), (1, 4, 7), (2, 5, 8), (3, 6, 9), (1, 5, 9), (3, 5, 7))
+    for each in winning:
+        try:
+            if board[each[0] - 1] == board[each[1] - 1] and board[each[1] - 1] == board[each[2] - 1]:
+                return board[each[0] - 1]
+        except:
+            pass
+    return -1
+
+#*******************input function***********************
+
+def userInput(turn):
+    valid = False
+    while not valid:
+        try:
+            user = raw_input(">>Place "+ turn + " (1-9)? ")
+            user = int(user)
+            if user >= 1 and user <= 9:
+                return user - 1
+            else:
+                print ">>That is not a valid move! Please try again.\n"
+        except Exception as e:
+            print user + " is not a valid move! Please try again.\n"
+
+
+#*******************Quit function***********************
+
+def quitGame(board, show):
+    printBoard(board)
+    print show
+    quit()
+
+#*******************Board Print function***********************
+
+def printBoard(board):
+    print "\n ***TicTacToe Board*** \n"
+
+    for i in range(3):
+        print " ",
+        for j in range(3):
+            if board[i * 3 + j] == 1:
+                print 'X',
+            elif board[i * 3 + j] == 0:
+                print 'O',
+            elif board[i * 3 + j] != -1:
+                print board[i * 3 + j] - 1,
+            else:
+                print ' ',
+
+            if j != 2:
+                print " || ",
+        print
+
+        if i != 2:
+            print "--------------------"
+        else:
+            print
+
+
+
+def main():
+
+    print "Numbers are showing places on board"
+    printBoard([2, 3, 4, 5, 6, 7, 8, 9, 10])
+
+
+    board = []
+    for i in range(9):
+        board.append(-1)
+
+    win = False
+    move = 0              #move is for setting Player Turn
+
+    while not win:
+
+        printBoard(board)                  #print present board
+
+        print ">>Turn: "+ str(move + 1)       #print turn
+        if move % 2 == 0:
+            print ">>X Turn"
+            turn = 'X'
+        else:
+            print ">>O Turn"
+            turn = 'O'
+
+        user = userInput(turn)             #user input
+        while board[user] != -1:
+            print ">>Cell isn't available...Try again \n"
+            user = userInput(turn)
+        board[user] = 1 if turn == 'X' else 0
+
+        move += 1                   #game complete or not
+        if move > 4:
+            winner = winFunction(board)
+            if winner != -1:
+                out = "X" if winner == 1 else "O"
+                out += " Won the match ;) "
+                quitGame(board, out)
+            elif move == 9:
+                quitGame(board, ":| DRAW :|")
+
+
+if __name__ == "__main__":
+    main()
